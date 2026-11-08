@@ -1,0 +1,30 @@
+name: Compile ESP8266 WiFiManager
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch: 
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Compile Sketch
+      uses: arduino/compile-sketches@v1
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        fqbn: esp8266:esp8266:nodemcuv2
+        platforms: |
+          - name: esp8266:esp8266
+            source-url: https://arduino.esp8266.com/stable/package_esp8266com_index.json
+        libraries: |
+          - name: WiFiManager
+            version: 2.0.17
+        sketch-paths: |
+          - ./
+        cli-compile-flags: |
+          - --warnings="all"
